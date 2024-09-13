@@ -32,6 +32,41 @@ transactionsDf = spark.read.json("{0}/icedemo/trans/{1}/rawtransactions".format(
 transactionsDf.printSchema()
 ```
 
+```
+### CREATE PYTHON FUNCTION TO FLATTEN PYSPARK DATAFRAME NESTED STRUCTS
+def flatten_struct(schema, prefix=""):
+    result = []
+    for elem in schema:
+        if isinstance(elem.dataType, StructType):
+            result += flatten_struct(elem.dataType, prefix + elem.name + ".")
+        else:
+            result.append(F.col(prefix + elem.name).alias(prefix + elem.name))
+    return result
+```
+
+```
+### RUN PYTHON FUNCTION TO FLATTEN NESTED STRUCTS AND VALIDATE NEW SCHEMA
+transactionsDf = transactionsDf.select(flatten_struct(transactionsDf.schema))
+transactionsDf.printSchema()
+```
+
+```
+### RENAME COLUMNS
+transactionsDf = transactionsDf.withColumnRenamed("transaction.transaction_amount", "transaction_amount")
+transactionsDf = transactionsDf.withColumnRenamed("transaction.transaction_currency", "transaction_currency")
+transactionsDf = transactionsDf.withColumnRenamed("transaction.transaction_type", "transaction_type")
+transactionsDf = transactionsDf.withColumnRenamed("transaction_geolocation.latitude", "latitude")
+transactionsDf = transactionsDf.withColumnRenamed("transaction_geolocation.longitude", "longitude")
+```
+
+```
+### CAST COLUMN TYPES FROM STRING TO APPROPRIATE TYPE
+transactionsDf = transactionsDf.withColumn("transaction_amount",  transactionsDf["transaction_amount"].cast('float'))
+transactionsDf = transactionsDf.withColumn("latitude",  transactionsDf["latitude"].cast('float'))
+transactionsDf = transactionsDf.withColumn("longitude",  transactionsDf["longitude"].cast('float'))
+transactionsDf = transactionsDf.withColumn("event_ts", transactionsDf["event_ts"].cast("timestamp"))
+```
+
 #### Iceberg Merge Into
 
 Create Transactions Iceberg table:
