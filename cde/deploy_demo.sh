@@ -2,8 +2,7 @@
 
 docker_user=$1
 cde_user=$2
-max_participants=$3
-cdp_data_lake_storage=$4
+cdp_data_lake_storage=$3
 
 cde_user_formatted=${cde_user//[-._]/}
 d=$(date)
@@ -21,16 +20,13 @@ cde job delete --name ice-demo-setup-$cde_user
 cde credential delete --name docker-creds-$cde_user"-ice-demo"
 cde credential create --name docker-creds-$cde_user"-ice-demo" --type docker-basic --docker-server hub.docker.com --docker-username $docker_user
 cde resource create --name dex-spark-runtime-$cde_user --image pauldefusco/dex-spark-runtime-3.2.3-7.2.15.8:1.20.0-b15-great-expectations-data-quality --image-engine spark3 --type custom-runtime-image
-echo "CREATE FILE RESOURCE FOR MERGE INTO - TIME TRAVEL DEMO"
+echo "CREATE FILE RESOURCE FOR DEMOS"
 cde resource delete --name ice-demo-setup-$cde_user
 cde resource create --name ice-demo-setup-$cde_user --type files
-cde resource upload --name ice-demo-setup-$cde_user --local-path utils.py --local-path setup.py
-echo "CREATE FILE RESOURCE FOR TABLE TAGGING BRANCHING DEMO"
-cde resource create --name myFiles --type files
-cde resource upload --name myFiles --local-path cell_towers_1.csv --local-path cell_towers_2.csv
+cde resource upload --name ice-demo-setup-$cde_user --local-path utils.py --local-path setup.py --local-path cell_towers_1.csv --local-path cell_towers_2.csv
 echo "CREATE AND RUN SETUP JOB"
 cde job create --name ice-demo-setup-$cde_user --type spark --mount-1-resource ice-demo-setup-$cde_user --application-file setup.py --runtime-image-resource-name dex-spark-runtime-$cde_user
-cde job run --name ice-demo-setup-$cde_user --arg $max_participants --arg $cdp_data_lake_storage
+cde job run --name ice-demo-setup-$cde_user --arg $cdp_data_lake_storage
 
 function loading_icon_job() {
   local loading_animation=( '—' "\\" '|' '/' )

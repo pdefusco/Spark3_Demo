@@ -10,10 +10,10 @@ For example:
 
 ```
 #AWS
-% ./deploy_hol.sh pauldefusco pauldefusco 1 s3a://goes-se-sandbox01/data
+% ./deploy_demo.sh pauldefusco pauldefusco s3a://paul-aug26-buk-a3c2b50a/data/pdefusco
 ```
 
 ```
 #Azure
-% ./deploy_hol.sh pauldefusco pauldefusco 1 abfs://logs@go01demoazure.dfs.core.windows.net/data
+% ./deploy_demo.sh pauldefusco pauldefusco abfs://logs@go01demoazure.dfs.core.windows.net/data
 ```

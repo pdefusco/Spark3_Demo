@@ -20,11 +20,9 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 from pyspark.sql.types import *
 
-storageLocation = "s3a://paul-aug26-buk-a3c2b50a/data/pdefusco/"
-username = "user002"
+storageLocation = "s3a://paul-aug26-buk-a3c2b50a/data/pdefusco"
+username = "pauldefusco"
 ```
-
-![alt text](../../img/part1-cdesession-4.png)
 
 No more code edits are required. Continue running each code snippet below in separate cells in the notebook.
 

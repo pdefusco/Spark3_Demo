@@ -52,15 +52,14 @@ def parseProperties():
     """
     try:
         print("PARSING JOB ARGUMENTS...")
-        maxParticipants = sys.argv[1]
-        storageLocation = sys.argv[2]
+        storageLocation = sys.argv[1]
     except Exception as e:
         print("READING JOB ARG UNSUCCESSFUL")
         print('\n')
         print(f'caught {type(e)}: e')
         print(e)
 
-    return maxParticipants, storageLocation
+    return storageLocation
 
 
 def createSparkSession():
@@ -165,7 +164,7 @@ def saveTransactionData(bankTransactionsDf, storageLocation, username):
             write. \
             format("json"). \
             mode("overwrite"). \
-            save("{0}/mkthol/trans/{1}/rawtransactions".format(storageLocation, username))
+            save("{0}/icedemo/trans/{1}/rawtransactions".format(storageLocation, username))
     except Exception as e:
         print("SAVING SYNTHETIC TRANSACTION DATA UNSUCCESSFUL")
         print('\n')
@@ -185,7 +184,7 @@ def saveTransactionBatch(transactionsBatchDf, storageLocation, username):
             write. \
             format("json"). \
             mode("overwrite"). \
-            save("{0}/mkthol/trans/{1}/trx_batch_1".format(storageLocation, username))
+            save("{0}/icedemo/trans/{1}/trx_batch_1".format(storageLocation, username))
     except Exception as e:
         print("SAVING TRANSACTION BATCH 1 UNSUCCESSFUL")
         print('\n')
@@ -205,7 +204,7 @@ def saveSecondTransactionBatch(secondTransactionsBatchDf, storageLocation, usern
             write. \
             format("json"). \
             mode("overwrite"). \
-            save("{0}/mkthol/trans/{1}/trx_batch_2".format(storageLocation, username))
+            save("{0}/icedemo/trans/{1}/trx_batch_2".format(storageLocation, username))
     except Exception as e:
         print("SAVING TRANSACTION BATCH 2 UNSUCCESSFUL")
         print('\n')
@@ -225,7 +224,7 @@ def savePiiData(piiDf, storageLocation, username):
             .write. \
             mode('overwrite') \
             .options(header='True', delimiter=',') \
-            .csv("{0}/mkthol/pii/{1}/pii".format(storageLocation, username))
+            .csv("{0}/icedemo/pii/{1}/pii".format(storageLocation, username))
     except Exception as e:
         print("SAVING SYNTHETIC TRANSACTION DATA UNSUCCESSFUL")
         print('\n')
@@ -235,31 +234,36 @@ def savePiiData(piiDf, storageLocation, username):
 
 def main():
 
-    maxParticipants, storageLocation = parseProperties()
+    storageLocation = parseProperties()
 
     spark = createSparkSession()
+    username = "pauldefusco"
 
-    for i in range(int(maxParticipants)):
-        if i+1 < 10:
-            username = "user00" + str(i+1)
-        elif i+1 > 9 and i+1 < 99:
-            username = "user0" + str(i+1)
-        elif i+1 > 99:
-            username = "user" + str(i+1)
+    print("PROCESSING USER {}...\n".format(username))
 
-        print("PROCESSING USER {}...\n".format(username))
+    bankTransactionsDf = createTransactionData(spark)
+    saveTransactionData(bankTransactionsDf, storageLocation, username)
 
-        bankTransactionsDf = createTransactionData(spark)
-        saveTransactionData(bankTransactionsDf, storageLocation, username)
+    piiDf = createPiiData(spark)
+    savePiiData(piiDf, storageLocation, username)
 
-        piiDf = createPiiData(spark)
-        savePiiData(piiDf, storageLocation, username)
+    transactionsBatchDf = createTransactionBatch(spark)
+    saveTransactionBatch(transactionsBatchDf, storageLocation, username)
 
-        transactionsBatchDf = createTransactionBatch(spark)
-        saveTransactionBatch(transactionsBatchDf, storageLocation, username)
+    secondTransactionsBatchDf = createSecondTransactionBatch(spark)
+    saveSecondTransactionBatch(secondTransactionsBatchDf, storageLocation, username)
 
-        secondTransactionsBatchDf = createSecondTransactionBatch(spark)
-        saveSecondTransactionBatch(secondTransactionsBatchDf, storageLocation, username)
+    readlocation1 = "/app/mount/cell_towers_1.csv"
+    readlocation2 = "/app/mount/cell_towers_2.csv"
+
+    writelocation1 = storageLocation + username + "/cell_towers/cell_towers_1.csv"
+    writelocation2 = storageLocation + username + "/cell_towers/cell_towers_2.csv"
+
+    df1=spark.read.csv(readlocation1)
+    df2=spark.read.csv(readlocation2)
+
+    df1.write.option("header",True).mode("overwrite").csv(writelocation1)
+    df2.write.option("header",True).mode("overwrite").csv(writelocation2)
 
 
 if __name__ == "__main__":
