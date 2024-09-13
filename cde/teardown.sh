@@ -14,4 +14,4 @@ cde resource upload --name ice-demo-setup-$cde_user --local-path teardown.py
 echo "Create teardown job teardown-"$cde_user
 cde job create --name teardown-$cde_user --type spark --mount-1-resource ice-demo-setup-$cde_user --application-file teardown.py
 echo "Run teardown job teardown-"$cde_user
-cde job run --name teardown-$cde_user --arg $max_participants
+cde job run --name teardown-$cde_user
