@@ -253,17 +253,26 @@ def main():
     secondTransactionsBatchDf = createSecondTransactionBatch(spark)
     saveSecondTransactionBatch(secondTransactionsBatchDf, storageLocation, username)
 
+    print("SAVING CELL TOWER DATA...")
+
     readlocation1 = "/app/mount/cell_towers_1.csv"
     readlocation2 = "/app/mount/cell_towers_2.csv"
 
-    writelocation1 = storageLocation + username + "/cell_towers/cell_towers_1.csv"
-    writelocation2 = storageLocation + username + "/cell_towers/cell_towers_2.csv"
+    writelocation1 = storageLocation + "/cell_towers/cell_towers_1.csv"
+    writelocation2 = storageLocation + "/cell_towers/cell_towers_2.csv"
 
-    df1=spark.read.csv(readlocation1)
-    df2=spark.read.csv(readlocation2)
+    #df1=spark.read.option("inferSchema",True).csv(readlocation1)
+    df1=spark.read.csv(readlocation1, inferSchema=True, header=True)
+    df2=spark.read.csv(readlocation2, inferSchema=True, header=True)
+    #df2=spark.read.option("inferSchema",True).csv(readlocation2)
 
-    df1.write.option("header",True).mode("overwrite").csv(writelocation1)
-    df2.write.option("header",True).mode("overwrite").csv(writelocation2)
+    print("\nPrint Df1 Schema...")
+    df1.printSchema()
+    print("\nPrint Df2 Schema...")
+    df2.printSchema()
+
+    df1.write.format("csv").option("header",True).mode("overwrite").save(writelocation1)
+    df2.write.format("csv").option("header",True).mode("overwrite").save(writelocation2)
 
 
 if __name__ == "__main__":

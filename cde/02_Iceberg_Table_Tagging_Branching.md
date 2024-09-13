@@ -2,11 +2,11 @@
 
 ```
 # CREATE ICEBERG TABLE
-df  = spark.read.csv(storageLocation + username + "/cell_towers/cell_towers_1.csv", header=True, inferSchema=True)
+df  = spark.read.csv(storageLocation + "/cell_towers/cell_towers_1.csv", header=True, inferSchema=True)
 df.writeTo("ICEBERG_CELL_TOWERS").using("iceberg").tableProperty("write.format.default", "parquet").createOrReplace()
 
 # LOAD NEW TRANSACTION BATCH
-batchDf = spark.read.csv(storageLocation + username + "/cell_towers/cell_towers_2.csv", header=True, inferSchema=True)
+batchDf = spark.read.csv(storageLocation + "/cell_towers/cell_towers_2.csv", header=True, inferSchema=True)
 batchDf.printSchema()
 batchDf.createOrReplaceTempView("TEMP_VIEW_NEW_BATCH")
 ```
