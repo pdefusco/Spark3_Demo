@@ -96,21 +96,11 @@ def dropDatabase(spark, username):
 
 def main():
 
-    maxParticipants = parseProperties()
+    username = "pauldefusco"
 
     spark = createSparkSession()
 
-    for i in range(int(maxParticipants)):
-        if i+1 < 10:
-            username = "user00" + str(i+1)
-        elif i+1 > 9 and i+1 < 99:
-            username = "user0" + str(i+1)
-        elif i+1 > 99:
-            username = "user" + str(i+1)
-
-        print("PROCESSING USER {}...\n".format(username))
-
-        dropDatabase(spark, username)
+    dropDatabase(spark, username)
 
 
 if __name__ == "__main__":

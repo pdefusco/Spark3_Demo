@@ -17,3 +17,9 @@ For example:
 #Azure
 % ./deploy_demo.sh pauldefusco pauldefusco abfs://logs@go01demoazure.dfs.core.windows.net/data
 ```
+
+## Iceberg Demo Teardown Instructions
+
+```
+% ./teardown.sh cdpworkloaduser
+```
