@@ -13,4 +13,4 @@ Differences between Spark 2.4 and 3.3 with examples in CML and CDE.
 
 #### Adaptive Query Execution Demo
 
-[embed]https://github.com/pdefusco/Spark3_Demo/blob/main/Spark3-9_13_24.pdf[/embed]
+https://github.com/pdefusco/Spark3_Demo/blob/main/Spark3-9_13_24.pdf
