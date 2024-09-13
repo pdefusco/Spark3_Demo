@@ -32,13 +32,6 @@ transactionsDf = spark.read.json("{0}/icedemo/trans/{1}/rawtransactions".format(
 transactionsDf.printSchema()
 ```
 
-```
-### LOAD CUSTOMER PII DATA FROM CLOUD STORAGE
-piiDf = spark.read.options(header='True', delimiter=',').csv("{0}/icedemo/pii/{1}/pii".format(storageLocation, username))
-piiDf.show()
-piiDf.printSchema()
-```
-
 #### Iceberg Merge Into
 
 Create Transactions Iceberg table:
