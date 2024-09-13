@@ -42,9 +42,7 @@ def flatten_struct(schema, prefix=""):
         else:
             result.append(F.col(prefix + elem.name).alias(prefix + elem.name))
     return result
-```
 
-```
 ### RUN PYTHON FUNCTION TO FLATTEN NESTED STRUCTS AND VALIDATE NEW SCHEMA
 transactionsDf = transactionsDf.select(flatten_struct(transactionsDf.schema))
 transactionsDf.printSchema()
@@ -57,9 +55,7 @@ transactionsDf = transactionsDf.withColumnRenamed("transaction.transaction_curre
 transactionsDf = transactionsDf.withColumnRenamed("transaction.transaction_type", "transaction_type")
 transactionsDf = transactionsDf.withColumnRenamed("transaction_geolocation.latitude", "latitude")
 transactionsDf = transactionsDf.withColumnRenamed("transaction_geolocation.longitude", "longitude")
-```
 
-```
 ### CAST COLUMN TYPES FROM STRING TO APPROPRIATE TYPE
 transactionsDf = transactionsDf.withColumn("transaction_amount",  transactionsDf["transaction_amount"].cast('float'))
 transactionsDf = transactionsDf.withColumn("latitude",  transactionsDf["latitude"].cast('float'))
