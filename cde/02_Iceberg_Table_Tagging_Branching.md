@@ -2,13 +2,11 @@
 
 ```
 # CREATE ICEBERG TABLE
-df  = spark.read.csv("/app/mount/cell_towers_1.csv", header=True, inferSchema=True)
+df  = spark.read.csv(storageLocation + username + "/cell_towers/cell_towers_1.csv", header=True, inferSchema=True)
 df.writeTo("ICEBERG_CELL_TOWERS").using("iceberg").tableProperty("write.format.default", "parquet").createOrReplace()
-```
 
-```
 # LOAD NEW TRANSACTION BATCH
-batchDf = spark.read.csv("/app/mount/cell_towers_2.csv", header=True, inferSchema=True)
+batchDf = spark.read.csv(storageLocation + username + "/cell_towers/cell_towers_2.csv", header=True, inferSchema=True)
 batchDf.printSchema()
 batchDf.createOrReplaceTempView("TEMP_VIEW_NEW_BATCH")
 ```
@@ -16,9 +14,7 @@ batchDf.createOrReplaceTempView("TEMP_VIEW_NEW_BATCH")
 ```
 # CREATE TABLE BRANCH
 spark.sql("ALTER TABLE ICEBERG_CELL_TOWERS CREATE BRANCH ingestion_branch")
-```
 
-```
 # WRITE DATA OPERATION ON TABLE BRANCH
 batchDf.write.format("iceberg").option("branch", "ingestion_branch").mode("append").save("ICEBERG_CELL_TOWERS")
 ```
@@ -59,9 +55,7 @@ spark.sql("SELECT COUNT(*) FROM ICEBERG_CELL_TOWERS;").show()
 ```
 # CREATE TABLE TAG
 spark.sql("ALTER TABLE SPARK_CATALOG.DEFAULT.ICEBERG_CELL_TOWERS CREATE TAG businessOrg RETAIN 365 DAYS").show()
-```
 
-```
 # SELECT TABLE SNAPSHOT AS OF A PARTICULAR TAG
 spark.sql("SELECT * FROM SPARK_CATALOG.DEFAULT.ICEBERG_CELL_TOWERS VERSION AS OF 'businessOrg';").show()
 ```
