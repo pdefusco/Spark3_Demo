@@ -1,0 +1,5 @@
+pandas==2.1.4
+PyArrow==17.0.0
+jmespath==1.0.1
+dbldatagen==0.4.0.post1
+faker
