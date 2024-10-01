@@ -64,7 +64,6 @@ def createSparkSession():
     """
     Method to create an Iceberg Spark Session
     """
-
     try:
         spark = SparkSession \
             .builder \
@@ -79,11 +78,24 @@ def createSparkSession():
     return spark
 
 
+def dropTablePurge(spark, username):
+    """
+    Method to Drop Purge an Iceberg Table
+    """
+    try:
+        print("DROP TABLE PURGE: {}".format(username))
+        spark.sql("DROP TABLE IF EXISTS {} PURGE".format(username))
+    except Exception as e:
+        print("DROP {} TABLE UNSUCCESSFUL".format(username))
+        print('\n')
+        print(f'caught {type(e)}: e')
+        print(e)
+
+
 def dropDatabase(spark, username):
     """
     Method to drop database for provided user
     """
-
     try:
         print("DROP DB CASCADE: {}".format(username))
         spark.sql("DROP DATABASE IF EXISTS {} CASCADE".format(username))
@@ -99,7 +111,7 @@ def main():
     username = "pauldefusco"
 
     spark = createSparkSession()
-
+    dropTablePurge(spark, username)
     dropDatabase(spark, username)
 
 

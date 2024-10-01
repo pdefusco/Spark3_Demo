@@ -20,7 +20,7 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
 from pyspark.sql.types import *
 
-storageLocation = "s3a://paul-aug26-buk-a3c2b50a/data/pdefusco"
+storageLocation = "s3a://paul-aug26-buk-a3c2b50a/data/spark3_demo/pdefusco"
 username = "pauldefusco"
 ```
 
