@@ -143,3 +143,7 @@ incReadDf = spark.read\
 print("Incremental Report:")
 incReadDf.show()
 ```
+
+```
+spark.sql("DROP TABLE IF EXISTS spark_catalog.HOL_DB_{0}.TRANSACTIONS_{0} PURGE".format(username))
+```
